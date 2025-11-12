@@ -1,7 +1,8 @@
 """Tests for LLM factory."""
 
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 from cv_writer.utils.llm_factory import LLMFactory
 
@@ -37,13 +38,14 @@ def test_create_openai_llm():
 
 def test_create_openai_llm_no_key():
     """Test creating OpenAI LLM without API key."""
-    with patch.dict("os.environ", {}, clear=True):
-        with pytest.raises(ValueError, match="OPENAI_API_KEY"):
-            LLMFactory.create_llm("openai", "gpt-4o", temperature=0.7)
+    with (
+        patch.dict("os.environ", {}, clear=True),
+        pytest.raises(ValueError, match="OPENAI_API_KEY"),
+    ):
+        LLMFactory.create_llm("openai", "gpt-4o", temperature=0.7)
 
 
 def test_create_ollama_llm():
     """Test creating Ollama LLM (no API key required)."""
     llm = LLMFactory.create_llm("ollama", "llama3.1", temperature=0.7)
     assert llm is not None
-

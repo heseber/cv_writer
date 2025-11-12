@@ -1,9 +1,7 @@
 """Tests for file handler."""
 
-from pathlib import Path
-
-from cv_writer.utils.file_handler import FileHandler
 from cv_writer.models import ReviewFeedback
+from cv_writer.utils.file_handler import FileHandler
 
 
 def test_ensure_directory(tmp_path):
@@ -70,4 +68,3 @@ def test_read_file(tmp_path):
 
     result = FileHandler.read_file(str(test_file))
     assert result == test_content
-

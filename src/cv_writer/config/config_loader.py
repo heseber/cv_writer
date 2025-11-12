@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 import yaml
 from dotenv import load_dotenv
@@ -32,7 +32,7 @@ class Config:
         },
     }
 
-    def __init__(self, config_file: Optional[str] = None):
+    def __init__(self, config_file: str | None = None):
         """
         Initialize configuration with hierarchical loading.
 
@@ -47,7 +47,7 @@ class Config:
         """
         self.config = self._load_config(config_file)
 
-    def _load_config(self, config_file: Optional[str]) -> Dict[str, Any]:
+    def _load_config(self, config_file: str | None) -> dict[str, Any]:
         """Load configuration from all sources."""
         # Start with defaults
         config = self._deep_copy_dict(self.DEFAULTS)
@@ -58,9 +58,7 @@ class Config:
             config = self._merge_dicts(config, file_config)
         else:
             # Try to load default config file
-            default_config_path = (
-                Path(__file__).parent / "cv_optimizer.yaml"
-            )
+            default_config_path = Path(__file__).parent / "cv_optimizer.yaml"
             if default_config_path.exists():
                 file_config = self._load_config_file(str(default_config_path))
                 config = self._merge_dicts(config, file_config)
@@ -71,18 +69,20 @@ class Config:
         return config
 
     @staticmethod
-    def _load_config_file(file_path: str) -> Dict[str, Any]:
+    def _load_config_file(file_path: str) -> dict[str, Any]:
         """Load configuration from YAML file."""
         try:
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 return yaml.safe_load(f) or {}
         except FileNotFoundError:
-            raise FileNotFoundError(f"Config file not found: {file_path}")
+            raise FileNotFoundError(f"Config file not found: {file_path}") from None
         except yaml.YAMLError as e:
-            raise ValueError(f"Invalid YAML in config file {file_path}: {str(e)}")
+            raise ValueError(
+                f"Invalid YAML in config file {file_path}: {str(e)}"
+            ) from e
 
     @staticmethod
-    def _load_from_env(config: Dict[str, Any]) -> Dict[str, Any]:
+    def _load_from_env(config: dict[str, Any]) -> dict[str, Any]:
         """Load configuration from environment variables."""
         # LLM configuration
         if os.getenv("LLM_PROVIDER"):
@@ -109,20 +109,25 @@ class Config:
         return config
 
     @staticmethod
-    def _merge_dicts(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:
+    def _merge_dicts(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
         """Recursively merge two dictionaries."""
         result = base.copy()
         for key, value in override.items():
-            if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            if (
+                key in result
+                and isinstance(result[key], dict)
+                and isinstance(value, dict)
+            ):
                 result[key] = Config._merge_dicts(result[key], value)
             else:
                 result[key] = value
         return result
 
     @staticmethod
-    def _deep_copy_dict(d: Dict[str, Any]) -> Dict[str, Any]:
+    def _deep_copy_dict(d: dict[str, Any]) -> dict[str, Any]:
         """Deep copy a dictionary."""
         import copy
+
         return copy.deepcopy(d)
 
     def get(self, key: str, default: Any = None) -> Any:
@@ -194,9 +199,10 @@ class Config:
     @property
     def feedback_filename_pattern(self) -> str:
         """Get feedback filename pattern."""
-        return self.get("output.feedback_filename_pattern", "cv_review_history_{timestamp}.md")
+        return self.get(
+            "output.feedback_filename_pattern", "cv_review_history_{timestamp}.md"
+        )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Return configuration as dictionary."""
         return self.config.copy()
-

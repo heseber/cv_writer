@@ -1,7 +1,6 @@
 """Tests for document parsing."""
 
 import pytest
-from pathlib import Path
 
 from cv_writer.tools.document_parser import DocumentParser
 
@@ -58,4 +57,3 @@ def test_parse_multiple_files(tmp_path):
     assert len(results) == 2
     assert results[0] == "Content 1"
     assert results[1] == "Content 2"
-

@@ -1,7 +1,5 @@
 """Web scraping tool for extracting job descriptions from URLs."""
 
-from typing import Optional
-
 try:
     import requests
     from bs4 import BeautifulSoup
@@ -74,9 +72,9 @@ class WebScraperTool:
             return cleaned_text
 
         except requests.exceptions.RequestException as e:
-            raise ValueError(f"Failed to fetch URL {url}: {str(e)}")
+            raise ValueError(f"Failed to fetch URL {url}: {str(e)}") from e
         except Exception as e:
-            raise ValueError(f"Failed to parse content from URL {url}: {str(e)}")
+            raise ValueError(f"Failed to parse content from URL {url}: {str(e)}") from e
 
 
 def scrape_web_page(url: str, timeout: int = 30) -> str:
@@ -92,4 +90,3 @@ def scrape_web_page(url: str, timeout: int = 30) -> str:
     """
     scraper = WebScraperTool(timeout=timeout)
     return scraper.scrape_url(url)
-

@@ -1,14 +1,11 @@
 """Main entry point for CV Optimizer CLI."""
 
 import sys
-from pathlib import Path
-from typing import List, Optional
 
 import click
 
 from cv_writer.config import Config
 from cv_writer.flows import CVOptimizationFlow
-from cv_writer.models import CVOptimizerState
 from cv_writer.tools import DocumentParser
 from cv_writer.utils import FileHandler, LLMFactory
 
@@ -63,11 +60,11 @@ def main(
     job_description: str,
     cv: str,
     additional_docs: tuple,
-    llm_provider: Optional[str],
-    llm_model: Optional[str],
-    max_iterations: Optional[int],
-    config: Optional[str],
-    output_dir: Optional[str],
+    llm_provider: str | None,
+    llm_model: str | None,
+    max_iterations: int | None,
+    config: str | None,
+    output_dir: str | None,
 ):
     """
     CV Optimizer - Optimize your CV for specific job descriptions.
@@ -104,7 +101,9 @@ def main(
             job_desc_text = DocumentParser.parse_source(job_description)
             print(f"✓ Job description loaded ({len(job_desc_text)} characters)\n")
         except Exception as e:
-            raise click.ClickException(f"Failed to load job description: {str(e)}")
+            raise click.ClickException(
+                f"Failed to load job description: {str(e)}"
+            ) from e
 
         # Parse CV
         print("Loading CV...")
@@ -112,17 +111,21 @@ def main(
             cv_text = DocumentParser.parse_file(cv)
             print(f"✓ CV loaded ({len(cv_text)} characters)\n")
         except Exception as e:
-            raise click.ClickException(f"Failed to load CV: {str(e)}")
+            raise click.ClickException(f"Failed to load CV: {str(e)}") from e
 
         # Parse additional documents
         supporting_docs = []
         if additional_docs:
             print(f"Loading {len(additional_docs)} additional document(s)...")
             try:
-                supporting_docs = DocumentParser.parse_multiple_files(list(additional_docs))
-                print(f"✓ All documents loaded\n")
+                supporting_docs = DocumentParser.parse_multiple_files(
+                    list(additional_docs)
+                )
+                print("✓ All documents loaded\n")
             except Exception as e:
-                raise click.ClickException(f"Failed to load additional documents: {str(e)}")
+                raise click.ClickException(
+                    f"Failed to load additional documents: {str(e)}"
+                ) from e
 
         # Create LLM instance
         print("Initializing LLM...")
@@ -132,19 +135,19 @@ def main(
                 model=cfg.llm_model,
                 temperature=cfg.llm_temperature,
             )
-            print(f"✓ LLM initialized\n")
+            print("✓ LLM initialized\n")
         except Exception as e:
-            raise click.ClickException(f"Failed to initialize LLM: {str(e)}")
+            raise click.ClickException(f"Failed to initialize LLM: {str(e)}") from e
 
         # Run optimization flow
         flow = CVOptimizationFlow(llm)
-        
+
         # Initialize state with inputs
         flow.state.job_description = job_desc_text
         flow.state.cv_draft = cv_text
         flow.state.supporting_docs = supporting_docs
         flow.state.max_iterations = cfg.max_iterations
-        
+
         # Run the flow
         flow.kickoff()
 
@@ -185,7 +188,9 @@ def main(
         if flow.state.status == "APPROVED":
             print("✓ CV was approved by the reviewer!")
         elif flow.state.status == "MAX_ITERATIONS_REACHED":
-            print("⚠ Maximum iterations reached. Consider running again with more iterations.")
+            print(
+                "⚠ Maximum iterations reached. Consider running again with more iterations."
+            )
 
         print("\nThank you for using CV Optimizer!\n")
 
@@ -195,7 +200,7 @@ def main(
         print("\n\nOptimization interrupted by user.")
         sys.exit(1)
     except Exception as e:
-        raise click.ClickException(f"An error occurred: {str(e)}")
+        raise click.ClickException(f"An error occurred: {str(e)}") from e
 
 
 def plot():
@@ -203,8 +208,9 @@ def plot():
     try:
         # Create a dummy LLM for plotting
         from cv_writer.utils import LLMFactory
+
         llm = LLMFactory.create_llm("openai", "gpt-4o", temperature=0.7)
-        
+
         flow = CVOptimizationFlow(llm)
         flow.plot()
     except Exception as e:

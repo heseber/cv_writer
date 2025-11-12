@@ -5,7 +5,6 @@ from datetime import datetime
 from typing import Any
 
 from crewai.flow import Flow, listen, router, start
-from pydantic import BaseModel
 
 from cv_writer.crews.reviewer_crew import ReviewerCrew
 from cv_writer.crews.writer_crew import WriterCrew
@@ -30,9 +29,9 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
     @start()
     def initialize_flow(self):
         """Initialize the flow and prepare the first CV version."""
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print("CV OPTIMIZATION FLOW - STARTING")
-        print(f"{'='*80}\n")
+        print(f"{'=' * 80}\n")
         print(f"Job Description length: {len(self.state.job_description)} characters")
         print(f"CV Draft length: {len(self.state.cv_draft)} characters")
         print(f"Supporting Documents: {len(self.state.supporting_docs)}")
@@ -45,15 +44,19 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
     @listen(initialize_flow)
     def review_cv(self):
         """Review the current CV version."""
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print(f"ITERATION {self.state.iteration_count + 1} - REVIEW PHASE")
-        print(f"{'='*80}\n")
+        print(f"{'=' * 80}\n")
 
         # Prepare supporting docs text
-        supporting_docs_text = "\n\n".join(
-            f"Document {i+1}:\n{doc}"
-            for i, doc in enumerate(self.state.supporting_docs)
-        ) if self.state.supporting_docs else "No additional documents provided."
+        supporting_docs_text = (
+            "\n\n".join(
+                f"Document {i + 1}:\n{doc}"
+                for i, doc in enumerate(self.state.supporting_docs)
+            )
+            if self.state.supporting_docs
+            else "No additional documents provided."
+        )
 
         # Run reviewer crew
         crew = self.reviewer_crew.crew(
@@ -65,7 +68,7 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
         )
 
         result = crew.kickoff()
-        feedback_text = result.raw if hasattr(result, 'raw') else str(result)
+        feedback_text = result.raw if hasattr(result, "raw") else str(result)
 
         # Extract decision from feedback
         decision = self._extract_decision(feedback_text)
@@ -100,40 +103,44 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
 
         # Check if approved
         if decision == "APPROVE":
-            print(f"\n{'='*80}")
+            print(f"\n{'=' * 80}")
             print("CV APPROVED - Flow Complete")
-            print(f"{'='*80}\n")
+            print(f"{'=' * 80}\n")
             self.state.status = "APPROVED"
             return self.complete_flow
 
         # Check if max iterations reached
         if self.state.iteration_count + 1 >= self.state.max_iterations:
-            print(f"\n{'='*80}")
+            print(f"\n{'=' * 80}")
             print("MAX ITERATIONS REACHED - Flow Complete")
-            print(f"{'='*80}\n")
+            print(f"{'=' * 80}\n")
             self.state.status = "MAX_ITERATIONS_REACHED"
             return self.complete_flow
 
         # Continue to revision
-        print(f"\nContinuing to revision phase...")
+        print("\nContinuing to revision phase...")
         self.state.status = "REVISING"
         return self.revise_cv
 
     @listen(route_decision)
     def revise_cv(self):
         """Revise the CV based on reviewer feedback."""
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print(f"ITERATION {self.state.iteration_count + 1} - WRITING PHASE")
-        print(f"{'='*80}\n")
+        print(f"{'=' * 80}\n")
 
         # Get latest feedback
         latest_feedback = self.state.feedback_history[-1].comments
 
         # Prepare supporting docs text
-        supporting_docs_text = "\n\n".join(
-            f"Document {i+1}:\n{doc}"
-            for i, doc in enumerate(self.state.supporting_docs)
-        ) if self.state.supporting_docs else "No additional documents provided."
+        supporting_docs_text = (
+            "\n\n".join(
+                f"Document {i + 1}:\n{doc}"
+                for i, doc in enumerate(self.state.supporting_docs)
+            )
+            if self.state.supporting_docs
+            else "No additional documents provided."
+        )
 
         # Run writer crew
         crew = self.writer_crew.crew(
@@ -144,7 +151,7 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
         )
 
         result = crew.kickoff()
-        revised_cv = result.raw if hasattr(result, 'raw') else str(result)
+        revised_cv = result.raw if hasattr(result, "raw") else str(result)
 
         # Clean up the CV (remove any markdown code blocks if present)
         revised_cv = self._clean_cv_output(revised_cv)
@@ -163,9 +170,9 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
     @listen(route_decision)
     def complete_flow(self):
         """Complete the flow."""
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print("CV OPTIMIZATION COMPLETE")
-        print(f"{'='*80}\n")
+        print(f"{'=' * 80}\n")
         print(f"Final Status: {self.state.status}")
         print(f"Total Iterations: {self.state.iteration_count}")
         print(f"Total Feedback Entries: {len(self.state.feedback_history)}\n")
@@ -242,8 +249,7 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
             r"^(Here is|Here's|Below is|The following is).*?CV:?\s*",
             "",
             cv_text,
-            flags=re.IGNORECASE | re.MULTILINE
+            flags=re.IGNORECASE | re.MULTILINE,
         )
 
         return cv_text.strip()
-

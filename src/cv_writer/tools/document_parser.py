@@ -1,7 +1,6 @@
 """Document parsing tool for handling various file formats."""
 
 from pathlib import Path
-from typing import List
 
 from cv_writer.tools.pdf_reader import read_pdf
 from cv_writer.tools.web_scraper import scrape_web_page
@@ -77,7 +76,7 @@ class DocumentParser:
         return DocumentParser.parse_file(source)
 
     @staticmethod
-    def parse_multiple_files(file_paths: List[str]) -> List[str]:
+    def parse_multiple_files(file_paths: list[str]) -> list[str]:
         """
         Parse multiple files and return their contents.
 
@@ -96,7 +95,6 @@ class DocumentParser:
                 content = DocumentParser.parse_file(file_path)
                 contents.append(content)
             except Exception as e:
-                raise ValueError(f"Failed to parse {file_path}: {str(e)}")
+                raise ValueError(f"Failed to parse {file_path}: {str(e)}") from e
 
         return contents
-

@@ -1,14 +1,16 @@
 """Reviewer crew for CV optimization."""
 
-from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
-import yaml
-from crewai import Agent, Crew, Task
+from crewai import Agent, Crew, Process, Task
+from crewai.project import agent, crew, task
 
 
 class ReviewerCrew:
     """Crew for reviewing CVs and providing feedback."""
+
+    agents_config = "config/agents.yaml"
+    tasks_config = "config/tasks.yaml"
 
     def __init__(self, llm: Any):
         """
@@ -18,98 +20,25 @@ class ReviewerCrew:
             llm: Language model instance
         """
         self.llm = llm
-        self.config_dir = Path(__file__).parent / "config"
-        self.agents_config = self._load_config("agents.yaml")
-        self.tasks_config = self._load_config("tasks.yaml")
 
-    def _load_config(self, filename: str) -> Dict[str, Any]:
-        """Load configuration from YAML file."""
-        config_path = self.config_dir / filename
-        with open(config_path, "r") as f:
-            return yaml.safe_load(f)
-
+    @agent
     def reviewer_agent(self) -> Agent:
-        """Create reviewer agent."""
-        config = self.agents_config["cv_reviewer"]
         return Agent(
-            role=config["role"],
-            goal=config["goal"],
-            backstory=config["backstory"],
-            verbose=config.get("verbose", True),
-            allow_delegation=config.get("allow_delegation", False),
-            llm=self.llm,
+            config=self.agents_config["cv_reviewer"],
         )
 
-    def review_task(
-        self,
-        agent: Agent,
-        job_description: str,
-        current_cv: str,
-        supporting_docs: str,
-        iteration_count: int,
-        max_iterations: int,
-    ) -> Task:
-        """
-        Create review task.
-
-        Args:
-            agent: Reviewer agent
-            job_description: Job description text
-            current_cv: Current CV version
-            supporting_docs: Supporting documents
-            iteration_count: Current iteration number
-            max_iterations: Maximum iterations
-
-        Returns:
-            Review task
-        """
-        config = self.tasks_config["review_cv"]
+    @task
+    def review_cv_task(self) -> Task:
         return Task(
-            description=config["description"].format(
-                job_description=job_description,
-                current_cv=current_cv,
-                supporting_docs=supporting_docs,
-                iteration_count=iteration_count,
-                max_iterations=max_iterations,
-            ),
-            expected_output=config["expected_output"],
-            agent=agent,
+            config=self.tasks_config["review_cv"],
         )
 
-    def crew(
-        self,
-        job_description: str,
-        current_cv: str,
-        supporting_docs: str = "",
-        iteration_count: int = 1,
-        max_iterations: int = 3,
-    ) -> Crew:
-        """
-        Create and return the reviewer crew.
-
-        Args:
-            job_description: Job description text
-            current_cv: Current CV version
-            supporting_docs: Supporting documents
-            iteration_count: Current iteration number
-            max_iterations: Maximum iterations
-
-        Returns:
-            Configured crew
-        """
-        agent = self.reviewer_agent()
-        task = self.review_task(
-            agent,
-            job_description,
-            current_cv,
-            supporting_docs,
-            iteration_count,
-            max_iterations,
-        )
-
+    @crew
+    def crew(self) -> Crew:
+        """Creates the Reviewer Crew"""
         return Crew(
-            agents=[agent],
-            tasks=[task],
-            verbose=True,
+            agents=self.agents,  # Automatically created by the @agent decorator
+            tasks=self.tasks,  # Automatically created by the @task decorator
+            process=Process.sequential,
+            verbose=False,
         )
-

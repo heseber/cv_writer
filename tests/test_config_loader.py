@@ -1,9 +1,5 @@
 """Tests for configuration loader."""
 
-import os
-import pytest
-from pathlib import Path
-
 from cv_writer.config import Config
 
 
@@ -60,4 +56,3 @@ def test_config_env_override(monkeypatch):
     config = Config()
     assert config.llm_provider == "ollama"
     assert config.max_iterations == 7
-

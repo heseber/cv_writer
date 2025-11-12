@@ -69,4 +69,3 @@ def test_feedback_history_update():
     state.feedback_history.append(feedback)
     assert len(state.feedback_history) == 1
     assert state.feedback_history[0].iteration == 1
-

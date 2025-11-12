@@ -1,7 +1,7 @@
 """LLM factory for creating language model instances."""
 
 import os
-from typing import Any, Optional
+from typing import Any
 
 from langchain_anthropic import ChatAnthropic
 from langchain_ollama import ChatOllama
@@ -13,10 +13,7 @@ class LLMFactory:
 
     @staticmethod
     def create_llm(
-        provider: str,
-        model: str,
-        temperature: float = 0.7,
-        **kwargs: Any
+        provider: str, model: str, temperature: float = 0.7, **kwargs: Any
     ) -> Any:
         """
         Create an LLM instance based on provider.
@@ -48,11 +45,7 @@ class LLMFactory:
             )
 
     @staticmethod
-    def _create_openai(
-        model: str,
-        temperature: float,
-        **kwargs: Any
-    ) -> ChatOpenAI:
+    def _create_openai(model: str, temperature: float, **kwargs: Any) -> ChatOpenAI:
         """Create OpenAI LLM instance."""
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
@@ -62,17 +55,12 @@ class LLMFactory:
             )
 
         return ChatOpenAI(
-            model=model,
-            temperature=temperature,
-            api_key=api_key,
-            **kwargs
+            model=model, temperature=temperature, api_key=api_key, **kwargs
         )
 
     @staticmethod
     def _create_anthropic(
-        model: str,
-        temperature: float,
-        **kwargs: Any
+        model: str, temperature: float, **kwargs: Any
     ) -> ChatAnthropic:
         """Create Anthropic LLM instance."""
         api_key = os.getenv("ANTHROPIC_API_KEY")
@@ -83,26 +71,16 @@ class LLMFactory:
             )
 
         return ChatAnthropic(
-            model=model,
-            temperature=temperature,
-            api_key=api_key,
-            **kwargs
+            model=model, temperature=temperature, api_key=api_key, **kwargs
         )
 
     @staticmethod
-    def _create_ollama(
-        model: str,
-        temperature: float,
-        **kwargs: Any
-    ) -> ChatOllama:
+    def _create_ollama(model: str, temperature: float, **kwargs: Any) -> ChatOllama:
         """Create Ollama LLM instance."""
         base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
         return ChatOllama(
-            model=model,
-            temperature=temperature,
-            base_url=base_url,
-            **kwargs
+            model=model, temperature=temperature, base_url=base_url, **kwargs
         )
 
     @staticmethod
@@ -135,4 +113,3 @@ class LLMFactory:
             "ollama": "llama3.1",
         }
         return defaults.get(provider.lower(), "gpt-4o")
-

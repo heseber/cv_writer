@@ -1,7 +1,6 @@
 """PDF extraction tool for CV Optimizer."""
 
 from pathlib import Path
-from typing import Optional
 
 try:
     from pypdf import PdfReader
@@ -54,7 +53,9 @@ class PDFReaderTool:
             return extracted_text
 
         except Exception as e:
-            raise ValueError(f"Failed to extract text from PDF {file_path}: {str(e)}")
+            raise ValueError(
+                f"Failed to extract text from PDF {file_path}: {str(e)}"
+            ) from e
 
 
 def read_pdf(file_path: str) -> str:
@@ -69,4 +70,3 @@ def read_pdf(file_path: str) -> str:
     """
     tool = PDFReaderTool()
     return tool.extract_text(file_path)
-

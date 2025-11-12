@@ -2,7 +2,6 @@
 
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 
 class FileHandler:
@@ -27,7 +26,7 @@ class FileHandler:
     def save_cv(
         cv_content: str,
         output_dir: str,
-        filename_pattern: str = "cv_optimized_{timestamp}.md"
+        filename_pattern: str = "cv_optimized_{timestamp}.md",
     ) -> Path:
         """
         Save CV content to file.
@@ -57,7 +56,7 @@ class FileHandler:
     def save_feedback_history(
         feedback_content: str,
         output_dir: str,
-        filename_pattern: str = "cv_review_history_{timestamp}.md"
+        filename_pattern: str = "cv_review_history_{timestamp}.md",
     ) -> Path:
         """
         Save feedback history to file.
@@ -98,7 +97,9 @@ class FileHandler:
 
         for feedback in feedback_history:
             lines.append(f"## Iteration {feedback.iteration}")
-            lines.append(f"**Timestamp:** {feedback.timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
+            lines.append(
+                f"**Timestamp:** {feedback.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
+            )
             lines.append(f"**Decision:** {feedback.decision}\n")
 
             lines.append("### Comments")
@@ -133,4 +134,3 @@ class FileHandler:
             raise FileNotFoundError(f"File not found: {file_path}")
 
         return path.read_text(encoding="utf-8")
-
