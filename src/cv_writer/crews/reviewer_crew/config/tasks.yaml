@@ -1,0 +1,40 @@
+review_cv:
+  description: >
+    Review the candidate's CV against the job description and provide detailed feedback.
+    
+    Job Description:
+    {job_description}
+    
+    Current CV Version:
+    {current_cv}
+    
+    Supporting Documents:
+    {supporting_docs}
+    
+    Iteration: {iteration_count} of {max_iterations}
+    
+    Analyze:
+    1. Alignment with job requirements
+    2. Relevant skills and experience presentation
+    3. Gaps or missing information
+    4. Formatting and clarity
+    5. Keywords and ATS optimization
+    
+    Provide:
+    - Specific improvement suggestions, but you MUST NOT make suggestions that
+      are not backed by the current CV version and by the supporting documents.
+    - Priority areas to address
+    - Examples of better phrasing when applicable
+    
+    Make a final decision: APPROVE or REVISE
+    
+    Your response MUST start with either "DECISION: APPROVE" or "DECISION: REVISE" on the first line.
+  expected_output: >
+    A structured review with:
+    - Decision: APPROVE or REVISE (must be on first line as "DECISION: APPROVE" or "DECISION: REVISE")
+    - Overall assessment (2-3 sentences)
+    - Detailed feedback organized by category
+    - Specific action items for improvement
+    - Prioritized list of changes needed
+  agent: cv_reviewer
+

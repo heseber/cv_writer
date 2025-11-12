@@ -1,0 +1,14 @@
+llm:
+  provider: openai
+  model: gpt-4o
+  temperature: 0.7
+
+optimizer:
+  max_iterations: 3
+  save_intermediate_versions: false
+
+output:
+  directory: ./output
+  cv_filename_pattern: "cv_optimized_{timestamp}.md"
+  feedback_filename_pattern: "cv_review_history_{timestamp}.md"
+

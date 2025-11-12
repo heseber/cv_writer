@@ -1,0 +1,49 @@
+Senior Software Engineer - Full Stack Development
+
+Company: TechCorp Inc.
+Location: Remote
+Type: Full-time
+
+About Us:
+TechCorp is a leading technology company specializing in cloud-based solutions for enterprise clients. We're looking for a talented Senior Software Engineer to join our growing team.
+
+Role Description:
+We are seeking an experienced Full Stack Software Engineer to design, develop, and maintain our enterprise applications. You will work closely with cross-functional teams to deliver high-quality software solutions.
+
+Key Responsibilities:
+- Design and develop scalable web applications using modern frameworks
+- Write clean, maintainable code following best practices
+- Collaborate with product managers and designers
+- Mentor junior developers
+- Participate in code reviews and architectural discussions
+- Implement automated testing and CI/CD pipelines
+- Troubleshoot and resolve production issues
+
+Required Skills:
+- 5+ years of professional software development experience
+- Strong proficiency in JavaScript/TypeScript and Python
+- Experience with React, Node.js, and modern web frameworks
+- Solid understanding of REST APIs and microservices architecture
+- Experience with SQL and NoSQL databases
+- Familiarity with cloud platforms (AWS, Azure, or GCP)
+- Strong problem-solving and communication skills
+- Bachelor's degree in Computer Science or related field
+
+Preferred Skills:
+- Experience with Docker and Kubernetes
+- Knowledge of DevOps practices and tools
+- Experience with GraphQL
+- Contributions to open-source projects
+- Experience in Agile/Scrum environments
+
+What We Offer:
+- Competitive salary and equity
+- Comprehensive health benefits
+- Remote work flexibility
+- Professional development opportunities
+- Collaborative team environment
+- Modern tech stack
+
+To Apply:
+Please submit your CV and portfolio showcasing your work.
+
