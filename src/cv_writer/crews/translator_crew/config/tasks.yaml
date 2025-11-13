@@ -14,6 +14,11 @@ translate_cv:
     - Do NOT wrap the output in code blocks
     - Output ONLY the translated CV content in pure markdown format
     
+    DO NOT TRANSLATE THE FOLLOWING:
+    - Publication references/citations (keep in original language)
+    - Certificate names (keep in original language)
+    - Technical terms and internationally recognized acronyms
+    
     CV to translate:
     {cv_content}
     
@@ -24,6 +29,7 @@ translate_cv:
     - Preserves exact markdown formatting and structure
     - Uses appropriate professional terminology for the target language
     - Maintains the same impact and tone as the original
+    - Keeps publication references and certificate names in their original language
     - Contains no explanatory text or metadata
     - Is ready to be saved directly as a markdown file
   
