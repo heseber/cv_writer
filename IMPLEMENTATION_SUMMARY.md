@@ -55,6 +55,14 @@ The CV Optimizer application has been successfully implemented as a CrewAI Flow-
 - Addresses all reviewer feedback
 - Optimizes for ATS and human readers
 
+**Translator Crew** ✓
+- Configuration: `crews/translator_crew/config/agents.yaml`
+- Tasks: `crews/translator_crew/config/tasks.yaml`
+- Agent persona: Professional translator specializing in career documents
+- Translates CVs while preserving formatting and structure
+- Adapts terminology for target language markets
+- Maintains exact markdown structure
+
 ### 4. Flow Implementation ✓
 
 **CVOptimizationFlow**
@@ -64,10 +72,12 @@ The CV Optimizer application has been successfully implemented as a CrewAI Flow-
   - `review_cv()` - Reviewer agent execution
   - `route_decision()` - Routing logic based on feedback
   - `revise_cv()` - Writer agent execution
+  - `translate_cv()` - Translation to target language (optional)
   - `complete_flow()` - Cleanup and finalization
 - Proper state management and iteration tracking
 - Decision extraction and feedback parsing
 - CV output cleaning (removes markdown blocks, explanatory text)
+- Optional translation phase after optimization
 
 ### 5. CLI Interface ✓
 
@@ -83,16 +93,24 @@ The CV Optimizer application has been successfully implemented as a CrewAI Flow-
   - `--max-iterations, -i` - Iteration limit
   - `--config` - Custom config file
   - `--output-dir, -o` - Output directory
+  - `--translate-to, -t` - Target language code for translation
+  - `--translation-llm-provider` - LLM provider for translation (if different)
+  - `--translation-llm-model` - LLM model for translation (if different)
 - Error handling and user-friendly messages
 - Progress indicators and status updates
+- Translation support with language-specific file naming
+- Separate LLM configuration for translation tasks
 
 ### 6. Output Generation ✓
 
 **Integrated into Main CLI**
 - Clean markdown CV output (no metadata or explanations)
+- Optional translated CV using same basename as English version with language suffix
 - Formatted feedback history with timestamps
 - Chronological iteration tracking
 - Summary statistics display
+- Separate LLM support for translation tasks
+- Respects custom filename patterns for translations
 
 ### 7. Testing ✓
 
@@ -149,6 +167,12 @@ cv_writer/
 │   │   ├── reviewer_crew/              # Reviewer agent
 │   │   │   ├── __init__.py
 │   │   │   ├── reviewer_crew.py
+│   │   │   └── config/
+│   │   │       ├── agents.yaml
+│   │   │       └── tasks.yaml
+│   │   ├── translator_crew/            # Translator agent
+│   │   │   ├── __init__.py
+│   │   │   ├── translator_crew.py
 │   │   │   └── config/
 │   │   │       ├── agents.yaml
 │   │   │       └── tasks.yaml
@@ -283,12 +307,12 @@ cv-optimizer --job-description job.txt --cv cv.md
 
 ## 🎉 Success!
 
-All PRD requirements have been implemented successfully. The CV Optimizer is ready for use as an MVP and can be extended in the future with:
+All PRD requirements have been implemented successfully. The CV Optimizer is ready for use as an MVP with translation support and can be extended in the future with:
 - Web interface
-- Additional output formats
+- Additional output formats (DOCX)
 - Cover letter generation
 - Industry-specific templates
-- Multi-language support
+- Batch translation to multiple languages simultaneously
 
 ---
 

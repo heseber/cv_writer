@@ -11,13 +11,11 @@ def test_review_feedback_creation():
         iteration=1,
         decision="REVISE",
         comments="Needs improvement",
-        improvements_needed=["Add more details", "Fix formatting"],
     )
 
     assert feedback.iteration == 1
     assert feedback.decision == "REVISE"
     assert feedback.comments == "Needs improvement"
-    assert len(feedback.improvements_needed) == 2
     assert isinstance(feedback.timestamp, datetime)
 
 
@@ -37,6 +35,8 @@ def test_cv_optimizer_state_defaults():
     assert state.feedback_history == []
     assert state.status == "INITIALIZED"
     assert state.final_decision is None
+    assert state.translate_to is None
+    assert state.translated_cv is None
 
 
 def test_cv_optimizer_state_with_values():
@@ -52,6 +52,22 @@ def test_cv_optimizer_state_with_values():
     assert len(state.supporting_docs) == 2
 
 
+def test_cv_optimizer_state_with_translation():
+    """Test CVOptimizerState with translation fields."""
+    state = CVOptimizerState(
+        job_description="Test job",
+        cv_draft="Test CV",
+        translate_to="de",
+    )
+
+    assert state.translate_to == "de"
+    assert state.translated_cv is None
+
+    # Simulate translation
+    state.translated_cv = "Übersetzter Lebenslauf"
+    assert state.translated_cv == "Übersetzter Lebenslauf"
+
+
 def test_feedback_history_update():
     """Test updating feedback history."""
     state = CVOptimizerState(
@@ -63,7 +79,6 @@ def test_feedback_history_update():
         iteration=1,
         decision="REVISE",
         comments="Test feedback",
-        improvements_needed=["Improvement 1"],
     )
 
     state.feedback_history.append(feedback)

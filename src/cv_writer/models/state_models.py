@@ -40,4 +40,10 @@ class CVOptimizerState(BaseModel):
     status: str = Field("INITIALIZED", description="Current flow status")
     final_decision: str | None = Field(None, description="Final decision from reviewer")
 
+    # Translation
+    translate_to: str | None = Field(
+        None, description="Target language code (e.g., 'de', 'fr')"
+    )
+    translated_cv: str | None = Field(None, description="Translated CV content")
+
     model_config = ConfigDict(arbitrary_types_allowed=True)

@@ -60,10 +60,34 @@ cv-optimizer \
 ## Step 5: Check Results
 
 Find your optimized CV in the `output/` directory:
-- `cv_optimized_[timestamp].md` - Your improved CV
+- `cv_optimized_[timestamp].md` - Your improved CV (English)
+- `cv_optimized_[timestamp]_[language].md` - Translated CV (if translation requested, e.g., `cv_optimized_20251113_123456_de.md`)
 - `cv_review_history_[timestamp].md` - Detailed feedback
 
 ## Next Steps
+
+### Translate Your CV
+
+```bash
+# Translate to German
+cv-optimizer \
+  --job-description job.txt \
+  --cv cv.md \
+  --translate-to de
+
+# Translate to French
+cv-optimizer \
+  --job-description job.txt \
+  --cv cv.md \
+  --translate-to fr
+
+# Use different LLM for translation
+cv-optimizer \
+  --job-description job.txt \
+  --cv cv.md \
+  --translate-to es \
+  --translation-llm-provider anthropic
+```
 
 ### Add Supporting Documents
 
@@ -119,7 +143,8 @@ cv-optimizer --job-description job.txt --cv cv.md --llm-provider ollama
 2. **Add Context**: Include portfolios, certificates as additional docs
 3. **Iterate**: Start with 3 iterations, increase if needed
 4. **Review Feedback**: Check the feedback history to understand changes
-5. **Personalize**: Use the output as a base, add your personal touch
+5. **Translate**: Use `--translate-to` for international applications (e.g., 'de', 'fr', 'es')
+6. **Personalize**: Use the output as a base, add your personal touch
 
 ## Get Help
 

@@ -110,6 +110,37 @@ class FileHandler:
         return "\n".join(lines)
 
     @staticmethod
+    def save_translated_cv(
+        cv_content: str,
+        output_dir: str,
+        language_code: str,
+        base_filename: str,
+    ) -> Path:
+        """
+        Save translated CV content to file with language code in filename.
+
+        Args:
+            cv_content: Translated CV markdown content
+            output_dir: Output directory
+            language_code: Two-letter language code (e.g., 'de', 'fr')
+            base_filename: Base filename from English CV (without extension)
+
+        Returns:
+            Path to saved file
+        """
+        # Ensure output directory exists
+        dir_path = FileHandler.ensure_directory(output_dir)
+
+        # Generate filename with language code: basename_language.md
+        filename = f"{base_filename}_{language_code}.md"
+        file_path = dir_path / filename
+
+        # Save content
+        file_path.write_text(cv_content, encoding="utf-8")
+
+        return file_path
+
+    @staticmethod
     def read_file(file_path: str) -> str:
         """
         Read file content.

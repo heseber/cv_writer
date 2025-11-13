@@ -8,6 +8,7 @@ AI-powered CV optimization using CrewAI Flow. This application uses AI agents to
 - **Multiple Input Formats**: Support for text, markdown, and PDF files
 - **Web Scraping**: Extract job descriptions directly from URLs
 - **Multi-LLM Support**: Works with OpenAI, Anthropic, and Ollama (local models)
+- **Multi-Language Translation**: Translate your optimized CV to any language (German, French, Spanish, etc.)
 - **Flexible Configuration**: Configure via files, environment variables, or CLI arguments
 - **Detailed Feedback**: Get comprehensive feedback history for all iterations
 - **Production Ready**: Clean, professional markdown output
@@ -84,6 +85,9 @@ cv-optimizer \
 - `--max-iterations`, `-i`: Maximum number of iterations (default: 3)
 - `--config`: Path to custom config file
 - `--output-dir`, `-o`: Output directory for results
+- `--translate-to`, `-t`: Target language code for translation (e.g., 'de', 'fr', 'es')
+- `--translation-llm-provider`: LLM provider for translation (if different from main)
+- `--translation-llm-model`: LLM model for translation (if different from main)
 
 ### Supported File Formats
 
@@ -123,6 +127,12 @@ output:
   directory: ./output
   cv_filename_pattern: "cv_optimized_{timestamp}.md"
   feedback_filename_pattern: "cv_review_history_{timestamp}.md"
+
+translation:
+  enabled: false
+  target_language: null
+  llm_provider: null  # Uses main LLM if not specified
+  llm_model: null     # Uses main LLM if not specified
 ```
 
 Use it:
@@ -140,6 +150,17 @@ export LLM_PROVIDER=anthropic
 export LLM_MODEL=claude-3-5-sonnet-20241022
 export MAX_ITERATIONS=5
 export OUTPUT_DIRECTORY=./my_output
+
+cv-optimizer --job-description job.txt --cv cv.md
+```
+
+#### Translation Environment Variables
+
+```bash
+# Enable translation with environment variables
+export TRANSLATE_TO=de
+export TRANSLATION_LLM_PROVIDER=ollama
+export TRANSLATION_LLM_MODEL=llama3.1
 
 cv-optimizer --job-description job.txt --cv cv.md
 ```
@@ -187,16 +208,28 @@ cv-optimizer --job-description job.txt --cv cv.md
 - Follows reviewer feedback meticulously
 - Optimizes for ATS and human readers
 
+#### Translator Agent
+- Professional translator specializing in career documents
+- Translates CVs while preserving formatting and impact
+- Adapts terminology for target language markets
+- Maintains exact markdown structure
+
 ## Output
 
-The application generates two files:
+The application generates the following files:
 
 1. **Optimized CV** (`cv_optimized_[timestamp].md`)
    - Clean markdown format
    - No explanations or metadata
    - Production-ready document
 
-2. **Feedback History** (`cv_review_history_[timestamp].md`)
+2. **Translated CV** (`[basename]_[language].md`) - *Optional*
+   - Appears only when `--translate-to` is specified
+   - Uses the same basename as English version with language code appended
+   - Language code suffix (e.g., `cv_optimized_20251113_123456_de.md`)
+   - Preserves exact formatting of original
+
+3. **Feedback History** (`cv_review_history_[timestamp].md`)
    - Chronological feedback from all iterations
    - Reviewer decisions and comments
    - Improvement suggestions
@@ -242,7 +275,39 @@ cv-optimizer \
   --max-iterations 3
 ```
 
-### Example 4: Custom Configuration
+### Example 4: Translation to German
+
+```bash
+export OPENAI_API_KEY=your_key_here
+
+cv-optimizer \
+  --job-description job.txt \
+  --cv cv.md \
+  --translate-to de
+```
+
+### Example 5: Translation with Different LLM
+
+```bash
+# Use Claude for translation while using GPT-4 for optimization
+cv-optimizer \
+  --job-description job.txt \
+  --cv cv.md \
+  --llm-provider openai \
+  --translate-to de \
+  --translation-llm-provider anthropic \
+  --translation-llm-model claude-3-5-sonnet-20241022
+
+# Use local Ollama model for translation to save costs
+cv-optimizer \
+  --job-description job.txt \
+  --cv cv.md \
+  --translate-to fr \
+  --translation-llm-provider ollama \
+  --translation-llm-model llama3.1
+```
+
+### Example 6: Custom Configuration
 
 ```bash
 cv-optimizer \
@@ -267,6 +332,7 @@ cv_writer/
 │   │   └── cv_optimizer.yaml        # Default config
 │   ├── crews/
 │   │   ├── reviewer_crew/           # Reviewer agent & tasks
+│   │   ├── translator_crew/         # Translator agent & tasks
 │   │   └── writer_crew/             # Writer agent & tasks
 │   ├── flows/
 │   │   └── cv_optimization_flow.py  # Main optimization flow
@@ -360,12 +426,12 @@ python -m cv_writer.main plot
 ## Future Enhancements
 
 - Web-based user interface
-- Multiple output formats (PDF, DOCX)
+- Multiple output formats (DOCX)
 - Cover letter generation
 - A/B testing of CV versions
 - Industry-specific templates
-- Multi-language support
 - Integration with job boards
+- Batch translation to multiple languages simultaneously
 
 ## License
 

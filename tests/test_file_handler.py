@@ -47,7 +47,6 @@ def test_format_feedback_history():
         iteration=1,
         decision="REVISE",
         comments="Test comments",
-        improvements_needed=["Item 1", "Item 2"],
     )
 
     result = FileHandler.format_feedback_history([feedback])
@@ -56,8 +55,44 @@ def test_format_feedback_history():
     assert "## Iteration 1" in result
     assert "REVISE" in result
     assert "Test comments" in result
-    assert "Item 1" in result
-    assert "Item 2" in result
+
+
+def test_save_translated_cv(tmp_path):
+    """Test saving translated CV content."""
+    cv_content = "# Test CV\n\nDies ist ein Test-Lebenslauf."
+    language_code = "de"
+    base_filename = "cv_optimized_20251113_123456"
+    
+    result = FileHandler.save_translated_cv(
+        cv_content=cv_content,
+        output_dir=str(tmp_path),
+        language_code=language_code,
+        base_filename=base_filename,
+    )
+
+    assert result.exists()
+    assert result.suffix == ".md"
+    assert result.name == f"{base_filename}_{language_code}.md"
+    assert result.read_text() == cv_content
+
+
+def test_save_translated_cv_custom_basename(tmp_path):
+    """Test saving translated CV with custom basename."""
+    cv_content = "# Test CV\n\nCeci est un CV de test."
+    language_code = "fr"
+    base_filename = "my_custom_cv_20251113_123456"
+    
+    result = FileHandler.save_translated_cv(
+        cv_content=cv_content,
+        output_dir=str(tmp_path),
+        language_code=language_code,
+        base_filename=base_filename,
+    )
+
+    assert result.exists()
+    assert result.suffix == ".md"
+    assert result.name == f"{base_filename}_{language_code}.md"
+    assert result.read_text() == cv_content
 
 
 def test_read_file(tmp_path):

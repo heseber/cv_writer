@@ -7,6 +7,7 @@ from typing import Any
 from crewai.flow import Flow, listen, or_, router, start
 
 from cv_writer.crews.reviewer_crew import ReviewerCrew
+from cv_writer.crews.translator_crew import TranslatorCrew
 from cv_writer.crews.writer_crew import WriterCrew
 from cv_writer.models.state_models import CVOptimizerState, ReviewFeedback
 
@@ -14,15 +15,17 @@ from cv_writer.models.state_models import CVOptimizerState, ReviewFeedback
 class CVOptimizationFlow(Flow[CVOptimizerState]):
     """Flow for iterative CV optimization."""
 
-    def __init__(self, llm: Any):
+    def __init__(self, llm: Any, translation_llm: Any | None = None):
         """
         Initialize CV Optimization Flow.
 
         Args:
-            llm: Language model instance
+            llm: Language model instance for optimization
+            translation_llm: Optional separate LLM for translation (uses main LLM if None)
         """
         super().__init__()
         self.llm = llm
+        self.translation_llm = translation_llm or llm
 
     @start()
     def initialize_flow(self):
@@ -181,6 +184,42 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
         print(f"Final Status: {self.state.status}")
         print(f"Total Iterations: {self.state.iteration_count}")
         print(f"Total Feedback Entries: {len(self.state.feedback_history)}\n")
+
+        # Translate if requested
+        if self.state.translate_to:
+            self.translate_cv()
+
+    def translate_cv(self):
+        """Translate the final CV to the target language."""
+        if not self.state.translate_to:
+            return
+
+        print(f"\n{'=' * 80}")
+        print(f"TRANSLATION PHASE - Translating to {self.state.translate_to.upper()}")
+        print(f"{'=' * 80}\n")
+
+        # Run translator crew with appropriate LLM
+        result = (
+            TranslatorCrew(self.translation_llm)
+            .crew()
+            .kickoff(
+                inputs={
+                    "cv_content": self.state.current_cv,
+                    "target_language": self.state.translate_to,
+                }
+            )
+        )
+
+        translated_cv = result.raw if hasattr(result, "raw") else str(result)
+
+        # Clean up the translated CV
+        translated_cv = self._clean_cv_output(translated_cv)
+
+        # Update state
+        self.state.translated_cv = translated_cv
+
+        print(f"\nTranslated CV length: {len(translated_cv)} characters")
+        print(f"Translation to {self.state.translate_to.upper()} complete\n")
 
     def _format_supporting_docs(self) -> str:
         """

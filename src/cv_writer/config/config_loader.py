@@ -30,6 +30,12 @@ class Config:
             "cv_filename_pattern": "cv_optimized_{timestamp}.md",
             "feedback_filename_pattern": "cv_review_history_{timestamp}.md",
         },
+        "translation": {
+            "enabled": False,
+            "target_language": None,
+            "llm_provider": None,
+            "llm_model": None,
+        },
     }
 
     def __init__(self, config_file: str | None = None):
@@ -105,6 +111,15 @@ class Config:
             if "ollama" not in config["llm"]:
                 config["llm"]["ollama"] = {}
             config["llm"]["ollama_base_url"] = os.getenv("OLLAMA_BASE_URL")
+
+        # Translation configuration
+        if os.getenv("TRANSLATE_TO"):
+            config["translation"]["target_language"] = os.getenv("TRANSLATE_TO")
+            config["translation"]["enabled"] = True
+        if os.getenv("TRANSLATION_LLM_PROVIDER"):
+            config["translation"]["llm_provider"] = os.getenv("TRANSLATION_LLM_PROVIDER")
+        if os.getenv("TRANSLATION_LLM_MODEL"):
+            config["translation"]["llm_model"] = os.getenv("TRANSLATION_LLM_MODEL")
 
         return config
 
@@ -202,6 +217,26 @@ class Config:
         return self.get(
             "output.feedback_filename_pattern", "cv_review_history_{timestamp}.md"
         )
+
+    @property
+    def translation_enabled(self) -> bool:
+        """Get translation enabled status."""
+        return self.get("translation.enabled", False)
+
+    @property
+    def translation_target_language(self) -> str | None:
+        """Get translation target language."""
+        return self.get("translation.target_language", None)
+
+    @property
+    def translation_llm_provider(self) -> str | None:
+        """Get translation LLM provider (None means use main LLM)."""
+        return self.get("translation.llm_provider", None)
+
+    @property
+    def translation_llm_model(self) -> str | None:
+        """Get translation LLM model (None means use main LLM)."""
+        return self.get("translation.llm_model", None)
 
     def to_dict(self) -> dict[str, Any]:
         """Return configuration as dictionary."""

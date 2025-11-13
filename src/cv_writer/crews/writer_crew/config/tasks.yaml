@@ -27,6 +27,8 @@ write_cv:
     Output ONLY the CV content in clean markdown format. 
     Do NOT include explanations, metadata, or commentary.
     Do NOT wrap the CV in code blocks or add any prefix/suffix text.
+    You MUST follow the reviewer feedback exactly, do not make up any information or expertise that is not backed by the current CV version or the supporting documents.
+    You MUST remove any expertise or experience that the reviewer has asked to remove.
 
   expected_output: >
     A complete, optimized CV in markdown format with:

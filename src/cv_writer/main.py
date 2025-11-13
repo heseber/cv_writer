@@ -56,6 +56,19 @@ from cv_writer.utils import FileHandler, LLMFactory
     "-o",
     help="Output directory for results",
 )
+@click.option(
+    "--translate-to",
+    "-t",
+    help="Target language code for translation (e.g., 'de', 'fr')",
+)
+@click.option(
+    "--translation-llm-provider",
+    help="LLM provider for translation (if different from main)",
+)
+@click.option(
+    "--translation-llm-model",
+    help="LLM model for translation (if different from main)",
+)
 def main(
     job_description: str,
     cv: str,
@@ -65,6 +78,9 @@ def main(
     max_iterations: int | None,
     config: str | None,
     output_dir: str | None,
+    translate_to: str | None,
+    translation_llm_provider: str | None,
+    translation_llm_model: str | None,
 ):
     """
     CV Optimizer - Optimize your CV for specific job descriptions.
@@ -84,6 +100,13 @@ def main(
             cfg.set("optimizer.max_iterations", max_iterations)
         if output_dir:
             cfg.set("output.directory", output_dir)
+        if translate_to:
+            cfg.set("translation.target_language", translate_to)
+            cfg.set("translation.enabled", True)
+        if translation_llm_provider:
+            cfg.set("translation.llm_provider", translation_llm_provider)
+        if translation_llm_model:
+            cfg.set("translation.llm_model", translation_llm_model)
 
         # Display configuration
         print("\n" + "=" * 80)
@@ -93,6 +116,10 @@ def main(
         print(f"LLM Model: {cfg.llm_model}")
         print(f"Max Iterations: {cfg.max_iterations}")
         print(f"Output Directory: {cfg.output_directory}")
+        if cfg.translation_target_language:
+            print(f"Translation: {cfg.translation_target_language.upper()}")
+            if cfg.translation_llm_provider:
+                print(f"Translation LLM: {cfg.translation_llm_provider}/{cfg.translation_llm_model or 'default'}")
         print("=" * 80 + "\n")
 
         # Parse job description
@@ -139,14 +166,31 @@ def main(
         except Exception as e:
             raise click.ClickException(f"Failed to initialize LLM: {str(e)}") from e
 
+        # Create translation LLM if needed
+        translation_llm = None
+        if cfg.translation_target_language and cfg.translation_llm_provider:
+            print("Initializing translation LLM...")
+            try:
+                translation_llm = LLMFactory.create_llm(
+                    provider=cfg.translation_llm_provider,
+                    model=cfg.translation_llm_model or cfg.llm_model,
+                    temperature=cfg.llm_temperature,
+                )
+                print("✅ Translation LLM initialized\n")
+            except Exception as e:
+                print(f"⚠️  Failed to initialize translation LLM: {str(e)}")
+                print("   Using main LLM for translation instead\n")
+                translation_llm = None
+
         # Run optimization flow
-        flow = CVOptimizationFlow(llm)
+        flow = CVOptimizationFlow(llm, translation_llm=translation_llm)
 
         # Initialize state with inputs
         flow.state.job_description = job_desc_text
         flow.state.cv_draft = cv_text
         flow.state.supporting_docs = supporting_docs
         flow.state.max_iterations = cfg.max_iterations
+        flow.state.translate_to = cfg.translation_target_language
 
         # Run the flow
         flow.kickoff()
@@ -163,6 +207,20 @@ def main(
             filename_pattern=cfg.cv_filename_pattern,
         )
         print(f"✅ Final CV saved: {cv_path}")
+
+        # Save translated CV if available
+        if flow.state.translated_cv:
+            # Use the same base filename as the English CV (without extension)
+            base_filename = cv_path.stem  # e.g., "cv_optimized_20251113_123456"
+            translated_cv_path = FileHandler.save_translated_cv(
+                cv_content=flow.state.translated_cv,
+                output_dir=cfg.output_directory,
+                language_code=cfg.translation_target_language,
+                base_filename=base_filename,
+            )
+            print(
+                f"✅ Translated CV ({cfg.translation_target_language.upper()}) saved: {translated_cv_path}"
+            )
 
         # Save feedback history
         feedback_content = FileHandler.format_feedback_history(

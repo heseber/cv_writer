@@ -46,6 +46,49 @@ optimizer:
     assert config.max_iterations == 5
 
 
+def test_translation_config_defaults():
+    """Test translation configuration default values."""
+    config = Config()
+    assert config.translation_enabled is False
+    assert config.translation_target_language is None
+    assert config.translation_llm_provider is None
+    assert config.translation_llm_model is None
+
+
+def test_translation_config_from_file(tmp_path):
+    """Test loading translation configuration from file."""
+    # Create a test config file
+    config_file = tmp_path / "test_config.yaml"
+    config_content = """
+translation:
+  enabled: true
+  target_language: de
+  llm_provider: anthropic
+  llm_model: claude-3-5-sonnet-20241022
+"""
+    config_file.write_text(config_content)
+
+    # Load configuration
+    config = Config(config_file=str(config_file))
+    assert config.translation_enabled is True
+    assert config.translation_target_language == "de"
+    assert config.translation_llm_provider == "anthropic"
+    assert config.translation_llm_model == "claude-3-5-sonnet-20241022"
+
+
+def test_translation_env_override(monkeypatch):
+    """Test translation environment variable overrides."""
+    monkeypatch.setenv("TRANSLATE_TO", "fr")
+    monkeypatch.setenv("TRANSLATION_LLM_PROVIDER", "ollama")
+    monkeypatch.setenv("TRANSLATION_LLM_MODEL", "llama3.1")
+
+    config = Config()
+    assert config.translation_enabled is True
+    assert config.translation_target_language == "fr"
+    assert config.translation_llm_provider == "ollama"
+    assert config.translation_llm_model == "llama3.1"
+
+
 def test_config_env_override(monkeypatch):
     """Test environment variable overrides."""
     # Set environment variables

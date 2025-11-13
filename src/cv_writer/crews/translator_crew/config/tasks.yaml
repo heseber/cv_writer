@@ -1,0 +1,31 @@
+translate_cv:
+  description: >
+    Translate the provided CV from English to {target_language}.
+    
+    IMPORTANT REQUIREMENTS:
+    - Preserve ALL markdown formatting exactly (headings, lists, bold, italic, links, etc.)
+    - Maintain the exact same document structure and section organization
+    - Keep all section headings in the same order
+    - Translate professional terminology appropriately for the target language market
+    - Preserve technical terms that are commonly used internationally (e.g., "JavaScript", "Python")
+    - Adapt company names, job titles, and descriptions to be culturally appropriate
+    - Maintain the professional tone and impact of the original
+    - Do NOT add any explanations, notes, or metadata
+    - Do NOT wrap the output in code blocks
+    - Output ONLY the translated CV content in pure markdown format
+    
+    CV to translate:
+    {cv_content}
+    
+    Target language: {target_language}
+  
+  expected_output: >
+    A fully translated CV in {target_language} that:
+    - Preserves exact markdown formatting and structure
+    - Uses appropriate professional terminology for the target language
+    - Maintains the same impact and tone as the original
+    - Contains no explanatory text or metadata
+    - Is ready to be saved directly as a markdown file
+  
+  agent: cv_translator
+

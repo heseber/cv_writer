@@ -12,3 +12,9 @@ output:
   cv_filename_pattern: "cv_optimized_{timestamp}.md"
   feedback_filename_pattern: "cv_review_history_{timestamp}.md"
 
+translation:
+  enabled: false
+  target_language: null
+  llm_provider: null  # Uses main LLM if not specified
+  llm_model: null     # Uses main LLM if not specified
+
