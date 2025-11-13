@@ -435,7 +435,7 @@ python -m cv_writer.main plot
 
 ## License
 
-This project is part of the job-application-helper suite.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
@@ -462,6 +462,6 @@ Built with:
 
 ---
 
-**Version**: 0.1.0  
-**Status**: MVP Ready  
+**Version**: 0.2.0  
+**Status**: Production Ready  
 **Python**: 3.10-3.13
