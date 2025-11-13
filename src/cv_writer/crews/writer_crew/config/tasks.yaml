@@ -22,11 +22,12 @@ write_cv:
     - Optimize for keywords from job description
     - Ensure clarity and conciseness
     - Use action verbs and quantifiable achievements
-    - You MUST NOT make up information that is not in the current CV version or the supporting documents.
+    - You MUST NOT make up expertise or experience that is not backed by the current CV version or the supporting documents.
     
-    Output ONLY the CV content in clean markdown format.
+    Output ONLY the CV content in clean markdown format. 
     Do NOT include explanations, metadata, or commentary.
     Do NOT wrap the CV in code blocks or add any prefix/suffix text.
+
   expected_output: >
     A complete, optimized CV in markdown format with:
     - Professional structure (Contact, Summary, Experience, Skills, Education)
@@ -35,5 +36,6 @@ write_cv:
     - Quantified achievements where possible
     - No surrounding text or explanations
     - No code blocks or formatting markers
+    - No expertise or experience that is not backed by the current CV version or the supporting documents.
   agent: cv_writer
 

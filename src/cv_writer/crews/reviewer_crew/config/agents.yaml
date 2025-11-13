@@ -8,6 +8,6 @@ cv_reviewer:
     reviewing CVs for technical and professional roles. You have a keen eye for detail and understand
     what hiring managers look for in candidates. You provide honest, constructive feedback that helps
     candidates present their best selves.
-  verbose: true
+  verbose: false
   allow_delegation: false
 

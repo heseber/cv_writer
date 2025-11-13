@@ -99,7 +99,7 @@ def main(
         print("Loading job description...")
         try:
             job_desc_text = DocumentParser.parse_source(job_description)
-            print(f"✓ Job description loaded ({len(job_desc_text)} characters)\n")
+            print(f"✅ Job description loaded ({len(job_desc_text)} characters)\n")
         except Exception as e:
             raise click.ClickException(
                 f"Failed to load job description: {str(e)}"
@@ -109,7 +109,7 @@ def main(
         print("Loading CV...")
         try:
             cv_text = DocumentParser.parse_file(cv)
-            print(f"✓ CV loaded ({len(cv_text)} characters)\n")
+            print(f"✅ CV loaded ({len(cv_text)} characters)\n")
         except Exception as e:
             raise click.ClickException(f"Failed to load CV: {str(e)}") from e
 
@@ -121,7 +121,7 @@ def main(
                 supporting_docs = DocumentParser.parse_multiple_files(
                     list(additional_docs)
                 )
-                print("✓ All documents loaded\n")
+                print("✅ All documents loaded\n")
             except Exception as e:
                 raise click.ClickException(
                     f"Failed to load additional documents: {str(e)}"
@@ -135,7 +135,7 @@ def main(
                 model=cfg.llm_model,
                 temperature=cfg.llm_temperature,
             )
-            print("✓ LLM initialized\n")
+            print("✅ LLM initialized\n")
         except Exception as e:
             raise click.ClickException(f"Failed to initialize LLM: {str(e)}") from e
 
@@ -162,7 +162,7 @@ def main(
             output_dir=cfg.output_directory,
             filename_pattern=cfg.cv_filename_pattern,
         )
-        print(f"✓ Final CV saved: {cv_path}")
+        print(f"✅ Final CV saved: {cv_path}")
 
         # Save feedback history
         feedback_content = FileHandler.format_feedback_history(
@@ -173,7 +173,7 @@ def main(
             output_dir=cfg.output_directory,
             filename_pattern=cfg.feedback_filename_pattern,
         )
-        print(f"✓ Feedback history saved: {feedback_path}")
+        print(f"✅ Feedback history saved: {feedback_path}")
 
         # Display summary
         print("\n" + "=" * 80)
@@ -186,10 +186,10 @@ def main(
         print("=" * 80 + "\n")
 
         if flow.state.status == "APPROVED":
-            print("✓ CV was approved by the reviewer!")
+            print("✅ CV was approved by the reviewer!")
         elif flow.state.status == "MAX_ITERATIONS_REACHED":
             print(
-                "⚠ Maximum iterations reached. Consider running again with more iterations."
+                "⚠️ Maximum iterations reached. Consider running again with more iterations."
             )
 
         print("\nThank you for using CV Optimizer!\n")
@@ -197,10 +197,10 @@ def main(
     except click.ClickException:
         raise
     except KeyboardInterrupt:
-        print("\n\nOptimization interrupted by user.")
+        print("\n\n⚠️ Optimization interrupted by user.")
         sys.exit(1)
     except Exception as e:
-        raise click.ClickException(f"An error occurred: {str(e)}") from e
+        raise click.ClickException(f"❌ An error occurred: {str(e)}") from e
 
 
 def plot():

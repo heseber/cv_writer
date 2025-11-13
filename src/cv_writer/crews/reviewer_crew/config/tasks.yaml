@@ -26,15 +26,16 @@ review_cv:
     - Priority areas to address
     - Examples of better phrasing when applicable
     
-    Make a final decision: APPROVE or REVISE
+    Make a final decision: APPROVED or REVISE
     
-    Your response MUST start with either "DECISION: APPROVE" or "DECISION: REVISE" on the first line.
+    Your response MUST start with either "DECISION: APPROVED" or "DECISION: REVISE" on the first line.
   expected_output: >
     A structured review with:
-    - Decision: APPROVE or REVISE (must be on first line as "DECISION: APPROVE" or "DECISION: REVISE")
+    - Decision: APPROVED or REVISE (must be on first line as "DECISION: APPROVED" or "DECISION: REVISE")
     - Overall assessment (2-3 sentences)
     - Detailed feedback organized by category
     - Specific action items for improvement
     - Prioritized list of changes needed
+    - List all expertise that is not backed by the current CV version or the supporting documents and give instructions to remove them.
   agent: cv_reviewer
 

@@ -17,6 +17,7 @@ dependencies = [
     "langchain-anthropic>=0.1.0",
     "langchain-ollama>=0.1.0",
     "ruff>=0.14.4",
+    "pytest>=9.0.1",
 ]
 
 [project.scripts]

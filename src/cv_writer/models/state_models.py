@@ -9,11 +9,8 @@ class ReviewFeedback(BaseModel):
     """Model for reviewer feedback."""
 
     iteration: int = Field(..., description="Iteration number")
-    decision: str = Field(..., description="APPROVE or REVISE")
+    decision: str = Field(..., description="APPROVED or REVISE")
     comments: str = Field(..., description="Detailed feedback comments")
-    improvements_needed: list[str] = Field(
-        default_factory=list, description="List of specific improvements"
-    )
     timestamp: datetime = Field(
         default_factory=datetime.now, description="Timestamp of feedback"
     )

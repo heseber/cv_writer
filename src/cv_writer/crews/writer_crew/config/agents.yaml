@@ -8,6 +8,6 @@ cv_writer:
     You excel at presenting candidate experience and skills in ways that resonate with hiring
     managers and pass ATS systems. You follow reviewer feedback meticulously and create
     polished, professional documents.
-  verbose: true
+  verbose: false
   allow_delegation: false
 

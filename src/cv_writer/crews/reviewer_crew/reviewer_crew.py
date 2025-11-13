@@ -3,9 +3,10 @@
 from typing import Any
 
 from crewai import Agent, Crew, Process, Task
-from crewai.project import agent, crew, task
+from crewai.project import CrewBase, agent, crew, task
 
 
+@CrewBase
 class ReviewerCrew:
     """Crew for reviewing CVs and providing feedback."""
 
@@ -22,15 +23,17 @@ class ReviewerCrew:
         self.llm = llm
 
     @agent
-    def reviewer_agent(self) -> Agent:
+    def cv_reviewer(self) -> Agent:
         return Agent(
             config=self.agents_config["cv_reviewer"],
+            llm=self.llm,
         )
 
     @task
-    def review_cv_task(self) -> Task:
+    def review_cv(self) -> Task:
         return Task(
             config=self.tasks_config["review_cv"],
+            agent=self.cv_reviewer(),
         )
 
     @crew

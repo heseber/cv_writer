@@ -105,12 +105,6 @@ class FileHandler:
             lines.append("### Comments")
             lines.append(feedback.comments + "\n")
 
-            if feedback.improvements_needed:
-                lines.append("### Improvements Needed")
-                for improvement in feedback.improvements_needed:
-                    lines.append(f"- {improvement}")
-                lines.append("")
-
             lines.append("---\n")
 
         return "\n".join(lines)
