@@ -177,7 +177,7 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
 
     @listen("decision_to_finalize")
     def complete_flow(self):
-        """Complete the flow."""
+        """Complete the optimization phase."""
         print(f"\n{'=' * 80}")
         print("CV OPTIMIZATION COMPLETE")
         print(f"{'=' * 80}\n")
@@ -185,15 +185,24 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
         print(f"Total Iterations: {self.state.iteration_count}")
         print(f"Total Feedback Entries: {len(self.state.feedback_history)}\n")
 
-        # Translate if requested
-        if self.state.translate_to:
-            self.translate_cv()
+    @router(complete_flow)
+    def route_translation(self):
+        """
+        Route based on translation requirement.
 
+        Returns:
+            Next method to execute or None to end flow
+        """
+        if self.state.translate_to:
+            print(f"\nTranslation requested to {self.state.translate_to.upper()}...")
+            return "decision_to_translate"
+        else:
+            print("\nNo translation requested. Flow complete.")
+            return "decision_to_end"
+
+    @listen("decision_to_translate")
     def translate_cv(self):
         """Translate the final CV to the target language."""
-        if not self.state.translate_to:
-            return
-
         print(f"\n{'=' * 80}")
         print(f"TRANSLATION PHASE - Translating to {self.state.translate_to.upper()}")
         print(f"{'=' * 80}\n")
@@ -220,6 +229,13 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
 
         print(f"\nTranslated CV length: {len(translated_cv)} characters")
         print(f"Translation to {self.state.translate_to.upper()} complete\n")
+
+    @listen(or_("decision_to_translate", "decision_to_end"))
+    def finalize_flow(self):
+        """Final cleanup and flow termination."""
+        print(f"\n{'=' * 80}")
+        print("FLOW FINALIZED")
+        print(f"{'=' * 80}\n")
 
     def _format_supporting_docs(self) -> str:
         """
