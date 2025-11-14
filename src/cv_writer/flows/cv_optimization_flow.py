@@ -2,7 +2,7 @@
 
 import re
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 
 from crewai.flow import Flow, listen, or_, router, start
 
@@ -145,7 +145,7 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
         self.state.final_decision = decision
 
     @router(review_cv)
-    def route_decision(self):
+    def route_decision(self) -> Literal["decision_to_finalize", "decision_to_revise"]:
         """
         Route based on reviewer decision.
 
@@ -186,7 +186,7 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
         print(f"Total Feedback Entries: {len(self.state.feedback_history)}\n")
 
     @router(complete_flow)
-    def route_translation(self):
+    def route_translation(self) -> Literal["decision_to_translate", "decision_to_end"]:
         """
         Route based on translation requirement.
 
@@ -230,7 +230,7 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
         print(f"\nTranslated CV length: {len(translated_cv)} characters")
         print(f"Translation to {self.state.translate_to.upper()} complete\n")
 
-    @listen(or_("decision_to_translate", "decision_to_end"))
+    @listen(or_(translate_cv, "decision_to_end"))
     def finalize_flow(self):
         """Final cleanup and flow termination."""
         print(f"\n{'=' * 80}")
