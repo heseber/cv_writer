@@ -267,7 +267,7 @@ def plot():
         # Create a dummy LLM for plotting
         from cv_writer.utils import LLMFactory
 
-        llm = LLMFactory.create_llm("openai", "gpt-5", temperature=0.7)
+        llm = LLMFactory.create_llm("openai", "gpt-4o", temperature=0.7)
 
         flow = CVOptimizationFlow(llm)
         flow.plot()

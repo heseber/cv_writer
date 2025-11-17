@@ -5,6 +5,35 @@ All notable changes to the CV Optimizer project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3] - 2025-11-17
+
+### Changed
+- Reverted default OpenAI model from `gpt-5.1` to `gpt-4o` (stable production model)
+- Updated default Anthropic model from `claude-3-5-sonnet-20241022` to `claude-sonnet-4-5`
+- Updated all documentation to reflect new default models
+- Updated test cases to expect new default models
+
+## [0.2.2] - 2025-11-17
+
+### Changed
+- Updated default OpenAI model from `gpt-5` to `gpt-5.1`
+- Optimized agent prompts for prompt caching by reordering variable components:
+  - Original CV version moved to first position (static, best for caching)
+  - Current CV version placed second (changes during iterations)
+  - Supporting documents placed third (static during iterations)
+  - Job description moved to end (most variable component)
+- Enhanced reviewer crew task configuration with structured sections and XML-style tags
+- Enhanced writer crew task configuration with structured sections and XML-style tags
+- Added explicit ORIGINAL CV VERSION tracking to prevent hallucination
+- Updated all documentation to reflect new default model
+- Updated test cases to expect `gpt-5.1` as default
+
+### Technical Details
+- Prompt caching optimization reduces API costs by caching static/semi-static content
+- New prompt order: Original CV → Current CV → Supporting Docs → Job Description → Reviewer Feedback
+- XML-style tags (`<ORIGINAL CV VERSION>`, `<JOB DESCRIPTION>`, etc.) improve clarity and parsing
+- This structure maximizes cache hits across multiple optimization iterations
+
 ## [0.2.1] - 2025-11-17
 
 ### Changed
@@ -97,6 +126,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline code documentation
 - Test coverage documentation
 
+[0.2.3]: https://github.com/heseber/cv_writer/releases/tag/v0.2.3
+[0.2.2]: https://github.com/heseber/cv_writer/releases/tag/v0.2.2
 [0.2.1]: https://github.com/heseber/cv_writer/releases/tag/v0.2.1
 [0.2.0]: https://github.com/heseber/cv_writer/releases/tag/v0.2.0
 [0.1.0]: https://github.com/heseber/cv_writer/releases/tag/v0.1.0

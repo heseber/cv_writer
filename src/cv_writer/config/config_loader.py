@@ -18,7 +18,7 @@ class Config:
     DEFAULTS = {
         "llm": {
             "provider": "openai",
-            "model": "gpt-5",
+            "model": "gpt-4o",
             "temperature": 0.7,
         },
         "optimizer": {
@@ -189,7 +189,7 @@ class Config:
     @property
     def llm_model(self) -> str:
         """Get LLM model."""
-        return self.get("llm.model", "gpt-5")
+        return self.get("llm.model", "gpt-4o")
 
     @property
     def llm_temperature(self) -> float:

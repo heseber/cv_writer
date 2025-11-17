@@ -116,7 +116,7 @@ Create a custom config file:
 ```yaml
 llm:
   provider: openai
-  model: gpt-5
+  model: gpt-4o
   temperature: 0.7
 
 optimizer:
@@ -147,7 +147,7 @@ Override configuration with environment variables:
 
 ```bash
 export LLM_PROVIDER=anthropic
-export LLM_MODEL=claude-3-5-sonnet-20241022
+export LLM_MODEL=claude-sonnet-4-5
 export MAX_ITERATIONS=5
 export OUTPUT_DIRECTORY=./my_output
 
@@ -289,14 +289,14 @@ cv-optimizer \
 ### Example 5: Translation with Different LLM
 
 ```bash
-# Use Claude for translation while using GPT-5 for optimization
+# Use Claude for translation while using GPT-4o for optimization
 cv-optimizer \
   --job-description job.txt \
   --cv cv.md \
   --llm-provider openai \
   --translate-to de \
   --translation-llm-provider anthropic \
-  --translation-llm-model claude-3-5-sonnet-20241022
+  --translation-llm-model claude-sonnet-4-5
 
 # Use local Ollama model for translation to save costs
 cv-optimizer \
@@ -377,15 +377,15 @@ python -m cv_writer.main plot
 
 #### OpenAI
 - **Provider**: `openai`
-- **Default Model**: `gpt-5`
+- **Default Model**: `gpt-4o`
 - **Environment Variable**: `OPENAI_API_KEY`
-- **Other Models**: `gpt-4o`, `gpt-4`, `gpt-3.5-turbo`, etc.
+- **Other Models**: `gpt-5.1`, `gpt-5`, `gpt-4`, `gpt-3.5-turbo`, etc.
 
 #### Anthropic
 - **Provider**: `anthropic`
-- **Default Model**: `claude-3-5-sonnet-20241022`
+- **Default Model**: `claude-sonnet-4-5`
 - **Environment Variable**: `ANTHROPIC_API_KEY`
-- **Other Models**: `claude-3-opus-20240229`, etc.
+- **Other Models**: `claude-3-5-sonnet-20241022`, `claude-3-opus-20240229`, etc.
 
 #### Ollama
 - **Provider**: `ollama`

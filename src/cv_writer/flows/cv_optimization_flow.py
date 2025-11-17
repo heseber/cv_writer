@@ -63,6 +63,7 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
                 inputs={
                     "job_description": self.state.job_description,
                     "current_cv": self.state.current_cv,
+                    "cv_draft": self.state.cv_draft,
                     "supporting_docs": supporting_docs_text,
                     "latest_feedback": latest_feedback,
                 }
@@ -105,6 +106,7 @@ class CVOptimizationFlow(Flow[CVOptimizerState]):
                 inputs={
                     "job_description": self.state.job_description,
                     "current_cv": self.state.current_cv,
+                    "cv_draft": self.state.cv_draft,
                     "supporting_docs": supporting_docs_text,
                     "iteration_count": self.state.iteration_count,
                     "max_iterations": self.state.max_iterations,

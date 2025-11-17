@@ -1,35 +1,48 @@
 write_cv:
   description: >
-    Create an improved version of the CV based on reviewer feedback.
-    
-    Job Description:
-    {job_description}
-    
-    Current CV Version:
-    {current_cv}
-    
-    Supporting Documents:
-    {supporting_docs}
-    
-    Reviewer Feedback:
-    {latest_feedback}
+    Create an improved version of the CURRENT CV version based on reviewer feedback.
+
     
     Requirements:
     - Address ALL points from reviewer feedback
-    - Include ALL positions in the experience section from the current CV version in the new CV version.
+    - Include ALL positions in the experience section from the CURRENT CV version in the new CV version.
     - Maintain professional CV formatting in markdown
-    - Incorporate relevant information from supporting documents
+    - Incorporate relevant information from the ORIGINAL CV version and the supporting documents
     - Optimize for keywords from job description
     - Ensure clarity and conciseness
     - Use action verbs and quantifiable achievements
-    - You MUST NOT make up expertise or experience that is not backed by the current CV version or the supporting documents.
+    - You MUST NOT make up expertise or experience that is not backed by the ORIGINAL CV version or the supporting documents.
     
     Output ONLY the CV content in clean markdown format. 
     Do NOT include explanations, metadata, or commentary.
     Do NOT wrap the CV in code blocks or add any prefix/suffix text.
-    You MUST follow the reviewer feedback exactly, do not make up any information or expertise that is not backed by the current CV version or the supporting documents.
+    You MUST follow the reviewer feedback exactly, do not make up any information or expertise that is not backed by the ORIGINAL CV version or the supporting documents.
     You MUST remove any expertise or experience that the reviewer has asked to remove.
 
+    ==== ORIGINAL CV VERSION ====
+    <ORIGINAL CV VERSION>
+    {cv_draft}
+    </ORIGINAL CV VERSION>
+    
+    ==== CURRENT CV VERSION ====
+    <CURRENT CV VERSION>
+    {current_cv}
+    </CURRENT CV VERSION>
+    
+    ==== SUPPORTING DOCUMENTS ====
+    <SUPPORTING DOCUMENTS>
+    {supporting_docs}
+    </SUPPORTING DOCUMENTS>
+    
+    ==== JOB DESCRIPTION ====
+    <JOB DESCRIPTION>
+    {job_description}
+    </JOB DESCRIPTION>
+    
+    ==== REVIEWER FEEDBACK ====
+    <REVIEWER FEEDBACK>
+    {latest_feedback}
+    </REVIEWER FEEDBACK>
   expected_output: >
     A complete, optimized CV in markdown format with:
     - Professional structure (Contact, Summary, Experience, Skills, Education)

@@ -1,17 +1,6 @@
 review_cv:
   description: >
-    Review the candidate's CV against the job description and provide detailed feedback.
-    
-    Job Description:
-    {job_description}
-    
-    Current CV Version:
-    {current_cv}
-    
-    Supporting Documents:
-    {supporting_docs}
-    
-    Iteration: {iteration_count} of {max_iterations}
+    Review the candidate's CURRENT CV version against the job description and provide detailed feedback.
     
     Analyze:
     1. Alignment with job requirements
@@ -22,13 +11,34 @@ review_cv:
     
     Provide:
     - Specific improvement suggestions, but you MUST NOT make suggestions that
-      are not backed by the current CV version or by the supporting documents.
+      are not backed by the ORIGINAL CV version or by the supporting documents.
     - Priority areas to address
     - Examples of better phrasing when applicable
     
     Make a final decision: APPROVED or REVISE
     
     Your response MUST start with either "DECISION: APPROVED" or "DECISION: REVISE" on the first line.
+
+    ==== ORIGINAL CV VERSION ====
+    <ORIGINAL CV VERSION>
+    {cv_draft}
+    </ORIGINAL CV VERSION>
+    
+    ==== CURRENT CV VERSION ====
+    <CURRENT CV VERSION>
+    {current_cv}
+    </CURRENT CV VERSION>
+    
+    ==== SUPPORTING DOCUMENTS ====
+    <SUPPORTING DOCUMENTS>
+    {supporting_docs}
+    </SUPPORTING DOCUMENTS>
+    
+    ==== JOB DESCRIPTION ====
+    <JOB DESCRIPTION>
+    {job_description}
+    </JOB DESCRIPTION>
+
   expected_output: >
     A structured review with:
     - Decision: APPROVED or REVISE (must be on first line as "DECISION: APPROVED" or "DECISION: REVISE")
