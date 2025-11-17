@@ -116,7 +116,7 @@ Create a custom config file:
 ```yaml
 llm:
   provider: openai
-  model: gpt-4o
+  model: gpt-5
   temperature: 0.7
 
 optimizer:
@@ -289,7 +289,7 @@ cv-optimizer \
 ### Example 5: Translation with Different LLM
 
 ```bash
-# Use Claude for translation while using GPT-4 for optimization
+# Use Claude for translation while using GPT-5 for optimization
 cv-optimizer \
   --job-description job.txt \
   --cv cv.md \
@@ -377,9 +377,9 @@ python -m cv_writer.main plot
 
 #### OpenAI
 - **Provider**: `openai`
-- **Default Model**: `gpt-4o`
+- **Default Model**: `gpt-5`
 - **Environment Variable**: `OPENAI_API_KEY`
-- **Other Models**: `gpt-4`, `gpt-3.5-turbo`, etc.
+- **Other Models**: `gpt-4o`, `gpt-4`, `gpt-3.5-turbo`, etc.
 
 #### Anthropic
 - **Provider**: `anthropic`

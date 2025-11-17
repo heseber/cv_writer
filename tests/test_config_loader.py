@@ -7,7 +7,7 @@ def test_default_config():
     """Test default configuration values."""
     config = Config()
     assert config.llm_provider == "openai"
-    assert config.llm_model == "gpt-4o"
+    assert config.llm_model == "gpt-5"
     assert config.max_iterations == 3
 
 
@@ -15,7 +15,7 @@ def test_config_get():
     """Test getting configuration values."""
     config = Config()
     assert config.get("llm.provider") == "openai"
-    assert config.get("llm.model") == "gpt-4o"
+    assert config.get("llm.model") == "gpt-5"
     assert config.get("nonexistent.key", "default") == "default"
 
 
